@@ -1,3 +1,5 @@
+// 2018.05.08 Make a project
+
 import express from 'express';
 import path from 'path';
 
@@ -11,7 +13,6 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 
 import api from './routes';
-
 
 const app = express();
 const port = 3000;
