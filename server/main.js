@@ -64,5 +64,4 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 /* setup routers & static directory */
-
 app.use('/api', api);
