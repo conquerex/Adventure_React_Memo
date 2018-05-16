@@ -102,16 +102,24 @@ router.post('/signin', (req, res) => {
             success: true
         });
     });
-
-
-    /* to be implemented */
-    res.json({success: true});
 });
 
+/*
+    GET CURRENT USER INFO GET /api/account/getInfo
+*/
 router.get('/getinfo', (req, res) => {
-    res.json({info: null});
+    if(typeof req.session.loginInfo === "undefined") {
+        return res.status(401).json({
+            error: 1
+        })
+    }
+    
+    res.json({info: req.session.loginInfo});
 });
 
+/*
+    LOGOUT: POST /api/account/logout
+*/
 router.post('/logout', (req, res) => {
     return res.json({success: true});
 });
