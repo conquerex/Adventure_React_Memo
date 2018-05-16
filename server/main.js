@@ -6,7 +6,7 @@ import morgan from 'morgan';        // HTTP REQUEST LOGGER
 import bodyParser from 'body-parser';   // PARSE HTML BODY
 import mongoose from 'mongoose';
 import session from 'express-session';
-
+import api from  './routes';
 
 /**
  * Express Codes
@@ -62,3 +62,7 @@ if (process.env.NODE_ENV == 'development') {
         }
     )
 }
+
+/* setup routers & static directory */
+
+app.use('/api', api);
