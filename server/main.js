@@ -32,7 +32,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 const db = mongoose.connection;
-db.on(error, console.error);
+db.on('error', console.error);
 db.once('open', () => {
     console.log('Connected to mongodb server');
 });
@@ -55,7 +55,8 @@ if (process.env.NODE_ENV == 'development') {
     console.log('Server is running on dev mode!!');
     const config = require('../webpack.dev.config');
     const compiler = webpack(config);
-    const devServer = WebpackDevServer(compiler, config.devServer);
+    const devServer = new WebpackDevServer(compiler, config.devServer);
+    
     devServer.listen(
         devPort, () => {
             console.log('webpack-dev-server is listening on port ', devPort);
@@ -65,6 +66,12 @@ if (process.env.NODE_ENV == 'development') {
 
 /* setup routers & static directory */
 app.use('/api', api);
+
+/* ... 주의: API 하단부에 작성하세요 ... */
+/* support client-side routing */
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, './../public/index.html'));
+})
 
 /* handle error */
 app.use(function(err, req, res, next) {
