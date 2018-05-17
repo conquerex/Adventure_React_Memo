@@ -1,6 +1,9 @@
 import React, {Component } from 'react';
 import { Header } from 'components'
 
+/**
+ * Deprecated
+ */
 class App extends Component {
     render(){
 

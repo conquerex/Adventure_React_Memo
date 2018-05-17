@@ -4,11 +4,15 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { App, Home, Login, Register } from 'containers';
 
+/* Check whether current route is login or register using regex */
+// let re = /(login|register)/;
+// let isAuth = re.test(this.props.location.pathname);
+
 const rootElement = document.getElementById('root');
 ReactDOM.render(
     <Router>
         <div>
-            <Route exact path="/" component={App} />
+            <Route exact path="/" component={Home} />
             <Route path="/home" component={Home} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
