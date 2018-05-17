@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
 
@@ -44,7 +45,7 @@ module.exports = {
 
 
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin()
     ],
