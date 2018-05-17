@@ -3,6 +3,22 @@ import React, {Component} from 'react';
 class Header extends Component {
     render() {
         
+        const loginButton = (
+            <li>
+                <a>
+                    <i className="material-icons">vpn_key</i>
+                </a>
+            </li>
+        );
+
+        const logoutButton = (
+            <li>
+                <a>
+                    <i className="material-icons">lock_open</i>
+                </a>
+            </li>
+        );
+
         return (
             <nav>
                 <div className="nav-wrapper blue darken-1">
@@ -14,12 +30,7 @@ class Header extends Component {
 
                     <div className="right">
                         <ul>
-                            <li>
-                                <a><i className="material-icons">vpn_key</i></a>
-                            </li>
-                            <li>
-                                <a><i className="material-icons">lock_open</i></a>
-                            </li>
+                            { this.props.isLoggedIn ? logoutButton : loginButton }
                         </ul>
                     </div>
                 </div>
