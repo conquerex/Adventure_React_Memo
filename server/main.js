@@ -67,6 +67,12 @@ if (process.env.NODE_ENV == 'development') {
 /* setup routers & static directory */
 app.use('/api', api);
 
+/* ... 주의: API 하단부에 작성하세요 ... */
+/* support client-side routing */
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, './../public/index.html'));
+})
+
 /* handle error */
 app.use(function(err, req, res, next) {
     console.log(err.stack);
