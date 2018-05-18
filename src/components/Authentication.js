@@ -4,24 +4,30 @@ import { Link } from 'react-router-dom';
 class Authentication extends Component {
     render() {
 
+        const inputBoxes = (
+            <div>
+                <div className="input-field col s12 username">
+                    <label>Username</label>
+                    <input
+                        name="username"
+                        type="text"
+                        className="validate"/>
+                </div>
+                <div className="input-field col s12">
+                    <label>Password</label>
+                    <input
+                        name="password"
+                        type="password"
+                        className="validate"/>
+                </div>
+            </div>
+        )
+
         const loginView = (
             <div>
                 <div className="card-content">
                     <div className="row">
-                        <div className="input-field col s12 username">
-                            <label>Username</label>
-                            <input
-                                name="username"
-                                type="text"
-                                className="validate"/>
-                        </div>
-                        <div className="input-field col s12">
-                            <label>Password</label>
-                            <input
-                                name="password"
-                                type="password"
-                                className="validate"/>
-                        </div>
+                        {inputBoxes}
                         <a className="waves-effect waves-light btn">SUBMIT</a>
                     </div>
                 </div>
@@ -39,20 +45,7 @@ class Authentication extends Component {
         const registerView = (
             <div className="card-content">
                 <div className="row">
-                    <div className="input-field col s12 username">
-                        <label>Username</label>
-                        <input
-                            name="username"
-                            type="text"
-                            className="validate"/>
-                    </div>
-                    <div className="input-field col s12">
-                        <label>Password</label>
-                        <input
-                            name="password"
-                            type="password"
-                            className="validate"/>
-                    </div>
+                    {inputBoxes}
                     <a className="waves-effect waves-light btn">CREATE</a>
                 </div>
             </div>
