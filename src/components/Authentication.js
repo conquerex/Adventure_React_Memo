@@ -10,4 +10,16 @@ class Authentication extends Component {
     }
 }
 
+Authentication.propTypes = {
+    mode: React.PropTypes.bool,
+    onLogin: React.PropTypes.func,
+    onRegister: React.PropTypes.func
+}
+
+Authentication.defaultProps = {
+    mode: true,
+    onLogin: (id, pw) => { console.log("Login function not defined!!!")},
+    onRegister: (id, pw) => { console.log("Register function not defined!!!")}
+}
+
 export default Authentication;

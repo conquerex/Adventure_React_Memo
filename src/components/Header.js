@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // 페이지를 새로 로딩하는것을 막고, 라우트에 보여지는 내용만 변하게
 
 class Header extends Component {
     render() {
         
         const loginButton = (
             <li>
-                <a>
+                <Link to ="/login">
                     <i className="material-icons">vpn_key</i>
-                </a>
+                </Link>
             </li>
         );
 
