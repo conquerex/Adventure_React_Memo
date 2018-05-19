@@ -1,4 +1,5 @@
 import express from 'express';
+import Account from '../models/account'
 
 const router = express.Router();
 
@@ -63,17 +64,19 @@ router.post('/signup', (req, res) => {
         1: LOGIN FAILED
 */
 router.post('/signin', (req, res) => {
+    console.log("----- signin api start -----");
+    console.log("----- ", res.body);
     if(typeof req.body.password !== "string") {
         return res.status(401).json({
             error: "LOGIN FAILED",
             code: 1
         });
     }
-
+    console.log("----- signin api : before Account.findOne -----");
     // FIND THE USER BY USERNAME
     Account.findOne({ username: req.body.username }, (err, account) => {
         if (err) throw err;
-
+        console.log("----- signin api : after err check : ", account, " -----");
         // CHECK ACCOUNT EXISTANCY
         if(!account) {
             return res.status(401).json({
@@ -81,7 +84,7 @@ router.post('/signin', (req, res) => {
                 code: 1
             });
         };
-
+        console.log("----- signin api : after account check -----");
         // CHECK WHETHER THE PASSWORD IS VALID
         if(!account.validateHash(req.body.password)) {
             return res.status(401).json({
@@ -90,13 +93,15 @@ router.post('/signin', (req, res) => {
             });
         };
 
+        console.log("----- signin api : after checkes -----");
+
         // AFTER SESSION
         let session = req.session;
         session.loginInfo = {
             _id: account._id,
             username: acount.username
         };
-
+        console.log("----- signin api : before SUCCESS -----");
         // RETURN SUCCESS
         return res.json({
             success: true

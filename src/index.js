@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import { Router, Route, IndexRoute } from 'react-router';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { App, Home, Login, Register } from 'containers';
 
 // Redux
@@ -25,10 +25,12 @@ ReactDOM.render(
     <Provider store={store}>
         <Router>
             <div>
-                <Route exact path="/" component={Home} />
-                <Route path="/home" component={Home} />
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route path="/home" component={Home} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
+                </Switch>
             </div>
         </Router>
     </Provider>, rootElement

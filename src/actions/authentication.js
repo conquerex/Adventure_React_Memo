@@ -16,13 +16,13 @@ export function loginRequest(username, password) {
         dispatch(login());
 
         // API REQUEST
-        return axios.post('/api/account/signin', { username, password} )
+        return axios.post('/api/account/signin', { username, password } )
             .then((response) => {
                 // SUCCEED
                 dispatch(loginSuccess(username));
             }).catch((error) => {
                 dispatch(loginFailure());
-            })
+            });
     }
 }
 

@@ -13,6 +13,7 @@ import api from  './routes';
  */
 const app = express();
 const port = 3000;
+const devPort = 4000;
 
 app.use('/', express.static(path.join(__dirname, './../public')));
 
@@ -45,25 +46,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-/**
- * Dev server
- */
-
-const devPort = 4000;
-
-if (process.env.NODE_ENV == 'development') {
-    console.log('Server is running on dev mode!!');
-    const config = require('../webpack.dev.config');
-    const compiler = webpack(config);
-    const devServer = new WebpackDevServer(compiler, config.devServer);
-    
-    devServer.listen(
-        devPort, () => {
-            console.log('webpack-dev-server is listening on port ', devPort);
-        }
-    )
-}
-
 /* setup routers & static directory */
 app.use('/api', api);
 
@@ -78,3 +60,20 @@ app.use(function(err, req, res, next) {
     console.log(err.stack);
     res.status(500).send('Something broke!');
 })
+
+/**
+ * Dev server
+ */
+
+if (process.env.NODE_ENV == 'development') {
+    console.log('Server is running on dev mode!!');
+    const config = require('../webpack.dev.config');
+    const compiler = webpack(config);
+    const devServer = new WebpackDevServer(compiler, config.devServer);
+    
+    devServer.listen(
+        devPort, () => {
+            console.log('webpack-dev-server is listening on port ', devPort);
+        }
+    )
+}
