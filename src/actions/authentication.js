@@ -91,7 +91,7 @@ export function registerFailure(error) {
 
 /* GET STATUS */
 
-export function getSTatusRequest() {
+export function getStatusRequest() {
     return (dispatch) => {
         // inform Get Status API is starting
         dispatch(getStatus());
