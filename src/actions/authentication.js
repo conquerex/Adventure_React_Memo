@@ -93,7 +93,15 @@ export function registerFailure(error) {
 
 export function getSTatusRequest() {
     return (dispatch) => {
-        //
+        // inform Get Status API is starting
+        dispatch(getStatus());
+
+        return axios.get('/api/account/getInfo')
+            .then((response) => {
+                dispatch(getStatusSuccess(response.data.info.username));
+            }).catch((error) => {
+                dispatch(getStatusFailure());
+            })
     }
 }
 
