@@ -24,14 +24,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
     <Provider store={store}>
         <Router>
-            <div>
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route path="/home" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/register" component={Register} />
-                </Switch>
-            </div>
+            <App/>
         </Router>
     </Provider>, rootElement
 );

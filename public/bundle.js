@@ -102,18 +102,7 @@
 	    _react2.default.createElement(
 	        _reactRouterDom.BrowserRouter,
 	        null,
-	        _react2.default.createElement(
-	            'div',
-	            null,
-	            _react2.default.createElement(
-	                _reactRouterDom.Switch,
-	                null,
-	                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home }),
-	                _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home }),
-	                _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
-	                _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register })
-	            )
-	        )
+	        _react2.default.createElement(_containers.App, null)
 	    )
 	), rootElement);
 
@@ -25910,6 +25899,10 @@
 
 	var _components = __webpack_require__(227);
 
+	var _reactRouterDom = __webpack_require__(185);
+
+	var _containers = __webpack_require__(225);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25938,7 +25931,14 @@
 	                'div',
 	                null,
 	                _react2.default.createElement(_components.Header, null),
-	                this.props.children
+	                _react2.default.createElement(
+	                    _reactRouterDom.Switch,
+	                    null,
+	                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home }),
+	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home }),
+	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
+	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register })
+	                )
 	            );
 	        }
 	    }]);
@@ -26408,7 +26408,6 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_components.Header, null),
 	                'Home'
 	            );
 	        }
@@ -29577,6 +29576,10 @@
 	exports.register = register;
 	exports.registerSuccess = registerSuccess;
 	exports.registerFailure = registerFailure;
+	exports.getSTatusRequest = getSTatusRequest;
+	exports.getStatus = getStatus;
+	exports.getStatusSuccess = getStatusSuccess;
+	exports.getStatusFailure = getStatusFailure;
 
 	var _axios = __webpack_require__(270);
 
@@ -29628,7 +29631,7 @@
 	/* REGISTER */
 
 	function registerRequest(username, password) {
-	    console.log("----- registerRequest start -----");
+
 	    return function (dispatch) {
 	        // Inform Register API is starting
 	        dispatch(register());
@@ -29658,6 +29661,40 @@
 	    return {
 	        type: _ActionTypes.AUTH_REGISTER_FAILURE,
 	        error: error
+	    };
+	}
+
+	/* GET STATUS */
+
+	function getSTatusRequest() {
+	    return function (dispatch) {
+	        // inform Get Status API is starting
+	        dispatch(getStatus());
+
+	        return _axios2.default.get('/api/account/getInfo').then(function (response) {
+	            dispatch(getStatusSuccess(response.data.info.username));
+	        }).catch(function (error) {
+	            dispatch(getStatusFailure());
+	        });
+	    };
+	}
+
+	function getStatus() {
+	    return {
+	        type: _ActionTypes.AUTH_GET_STATUS
+	    };
+	}
+
+	function getStatusSuccess(username) {
+	    return {
+	        type: _ActionTypes.AUTH_GET_STATUS_SUCCESS,
+	        username: username
+	    };
+	}
+
+	function getStatusFailure(error) {
+	    return {
+	        type: _ActionTypes.AUTH_GET_STATUS_FAILURE
 	    };
 	}
 
@@ -31231,6 +31268,10 @@
 	var AUTH_REGISTER_SUCCESS = exports.AUTH_REGISTER_SUCCESS = "AUTH_REGISTER_SUCCESS";
 	var AUTH_REGISTER_FAILURE = exports.AUTH_REGISTER_FAILURE = "AUTH_REGISTER_FAILURE";
 
+	var AUTH_GET_STATUS = exports.AUTH_GET_STATUS = "AUTH_GET_STATUS";
+	var AUTH_GET_STATUS_SUCCESS = exports.AUTH_GET_STATUS_SUCCESS = "AUTH_GET_STATUS_SUCCESS";
+	var AUTH_GET_STATUS_FAILURE = exports.AUTH_GET_STATUS_FAILURE = "AUTH_GET_STATUS_FAILURE";
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ActionTypes.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
@@ -31373,6 +31414,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _status;
+
 	exports.default = authentication;
 
 	var _ActionTypes = __webpack_require__(296);
@@ -31387,6 +31431,8 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var initialState = {
 	    login: {
 	        status: 'INIT'
@@ -31395,10 +31441,9 @@
 	        status: 'INIT',
 	        error: -1
 	    },
-	    status: {
-	        isLoggedIn: false,
-	        currentUser: ''
-	    }
+	    status: (_status = {
+	        isLoggedIn: false
+	    }, _defineProperty(_status, 'isLoggedIn', false), _defineProperty(_status, 'currentUser', ''), _status)
 	};
 
 	function authentication(state, action) {
@@ -31449,6 +31494,27 @@
 	                register: {
 	                    status: { $set: 'FAILURE' },
 	                    error: { $set: action.error }
+	                }
+	            });
+	        /****** STATUS ******/
+	        case types.AUTH_GET_STATUS:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    isLoggedIn: { $set: true }
+	                }
+	            });
+	        case types.AUTH_GET_STATUS_SUCCESS:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    valid: { $set: true },
+	                    currentUser: { $set: action.username }
+	                }
+	            });
+	        case types.AUTH_GET_STATUS_FAILURE:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    valid: { $set: false },
+	                    isLoggedIn: { $set: false }
 	                }
 	            });
 	        default:
