@@ -64,8 +64,6 @@ router.post('/signup', (req, res) => {
         1: LOGIN FAILED
 */
 router.post('/signin', (req, res) => {
-    console.log("----- signin api start -----");
-    console.log("----- ", res.body);
     if(typeof req.body.password !== "string") {
         return res.status(401).json({
             error: "LOGIN FAILED",
@@ -76,7 +74,7 @@ router.post('/signin', (req, res) => {
     // FIND THE USER BY USERNAME
     Account.findOne({ username: req.body.username }, (err, account) => {
         if (err) throw err;
-        console.log("----- signin api : after err check : ", account, " -----");
+        console.log("----- signin api : after err check : ", account);
         // CHECK ACCOUNT EXISTANCY
         if(!account) {
             return res.status(401).json({
@@ -116,7 +114,7 @@ router.get('/getinfo', (req, res) => {
             error: 1
         })
     }
-    
+    console.log("----- req.session : ", req.session.loginInfo);
     res.json({info: req.session.loginInfo});
 });
 

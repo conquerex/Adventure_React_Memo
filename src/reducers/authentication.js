@@ -70,20 +70,20 @@ export default function authentication(state, action) {
         /****** STATUS ******/
         case types.AUTH_GET_STATUS:
             return update(state, {
-                register: {
+                status: {
                     isLoggedIn: { $set: true }
                 }
             });
         case types.AUTH_GET_STATUS_SUCCESS:
             return update(state, {
-                register: {
+                status: {
                     valid: { $set: true },
                     currentUser: { $set: action.username }
                 }
             });
         case types.AUTH_GET_STATUS_FAILURE:
             return update(state, {
-                register: {
+                status: {
                     valid: { $set: false },
                     isLoggedIn: { $set: false },
                 }

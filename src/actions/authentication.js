@@ -95,11 +95,12 @@ export function getStatusRequest() {
     return (dispatch) => {
         // inform Get Status API is starting
         dispatch(getStatus());
-
+        
         return axios.get('/api/account/getInfo')
             .then((response) => {
                 dispatch(getStatusSuccess(response.data.info.username));
             }).catch((error) => {
+                console.log('----- error : ', error);
                 dispatch(getStatusFailure());
             })
     }

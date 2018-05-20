@@ -31,7 +31,6 @@ class App extends Component {
         // check whether this cookie is valid or not
         this.props.getStatusRequest().then(
             () => {
-                console.log(this.props.status);
                 // if session is not valid
                 if(!this.props.status.valid) {
                     loginData = {
@@ -54,15 +53,19 @@ class App extends Component {
         let re = /(login|register)/;
         let isAuth = re.test(location.pathname);
         
+        // todo 2018.05.21
+        // 로그인 버튼을 포함한 링크가 정상적으로 작동하고 있지 않음
         return (
                 <div>
                     {isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn} /> }
+                    <Router>
                     <Switch>
-                        <Route exact path="/" component={Home} />
-                        <Route path="/home" component={Home} />
                         <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
+                            <Route path="/home" component={Home} />
+                            <Route exact path="/" component={Home} />
                     </Switch>
+                    </Router>
                 </div>
         );
     }

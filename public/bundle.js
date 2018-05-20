@@ -25934,7 +25934,7 @@
 	                var value = "; " + document.cookie;
 	                var parts = value.split("; " + name + "=");
 	                if (parts.length == 2) return parts.pop().split(";").shift();
-	            };
+	            }
 
 	            // get loginData from cookie
 	            var loginData = getCookie('key');
@@ -25951,9 +25951,11 @@
 	            // page refreshed & has a session in cookie,
 	            // check whether this cookie is valid or not
 	            this.props.getStatusRequest().then(function () {
-	                console.log(_this2.props.status);
+	                console.log("----- session status : ", _this2.props.status.valid);
+	                console.log("----- session status : ", _this2.props.status.valid);
 	                // if session is not valid
 	                if (!_this2.props.status.valid) {
+	                    // logout the session
 	                    loginData = {
 	                        isLoggedIn: false,
 	                        username: ''
@@ -25962,7 +25964,7 @@
 	                    document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
 	                    // and notify
-	                    var $toastContent = $('<span style="color: #ffb4ba">Your session is expired, please log in again</span>');
+	                    var $toastContent = $('<span style="color: #FFB4BA">Your session is expired, please log in again</span>');
 	                    Materialize.toast($toastContent, 4000);
 	                }
 	            });
@@ -25974,17 +25976,23 @@
 	            var re = /(login|register)/;
 	            var isAuth = re.test(location.pathname);
 
+	            // todo 2018.05.21
+	            // 로그인 버튼을 포함한 링크가 정상적으로 작동하고 있지 않음
 	            return _react2.default.createElement(
 	                'div',
 	                null,
 	                isAuth ? undefined : _react2.default.createElement(_components.Header, { isLoggedIn: this.props.status.isLoggedIn }),
 	                _react2.default.createElement(
-	                    _reactRouterDom.Switch,
+	                    _reactRouterDom.BrowserRouter,
 	                    null,
-	                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home }),
-	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home }),
-	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
-	                    _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register })
+	                    _react2.default.createElement(
+	                        _reactRouterDom.Switch,
+	                        null,
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register }),
+	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home }),
+	                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home })
+	                    )
 	                )
 	            );
 	        }
@@ -26541,8 +26549,10 @@
 	        dispatch(getStatus());
 
 	        return _axios2.default.get('/api/account/getInfo').then(function (response) {
+	            console.log('----- info.username : ', response.data.info.username);
 	            dispatch(getStatusSuccess(response.data.info.username));
 	        }).catch(function (error) {
+	            console.log('----- error : ', error);
 	            dispatch(getStatusFailure());
 	        });
 	    };
@@ -31560,20 +31570,20 @@
 	        /****** STATUS ******/
 	        case types.AUTH_GET_STATUS:
 	            return (0, _reactAddonsUpdate2.default)(state, {
-	                register: {
+	                status: {
 	                    isLoggedIn: { $set: true }
 	                }
 	            });
 	        case types.AUTH_GET_STATUS_SUCCESS:
 	            return (0, _reactAddonsUpdate2.default)(state, {
-	                register: {
+	                status: {
 	                    valid: { $set: true },
 	                    currentUser: { $set: action.username }
 	                }
 	            });
 	        case types.AUTH_GET_STATUS_FAILURE:
 	            return (0, _reactAddonsUpdate2.default)(state, {
-	                register: {
+	                status: {
 	                    valid: { $set: false },
 	                    isLoggedIn: { $set: false }
 	                }
