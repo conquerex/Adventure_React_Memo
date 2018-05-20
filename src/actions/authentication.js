@@ -5,7 +5,10 @@ import {
     AUTH_LOGIN_FAILURE,
     AUTH_REGISTER,
     AUTH_REGISTER_SUCCESS,
-    AUTH_REGISTER_FAILURE
+    AUTH_REGISTER_FAILURE,
+    AUTH_GET_STATUS,
+    AUTH_GET_STATUS_SUCCESS,
+    AUTH_GET_STATUS_FAILURE
 } from './ActionTypes';
 
 /*============================================================================
@@ -51,7 +54,7 @@ export function loginFailure() {
 /* REGISTER */
 
 export function registerRequest(username, password) {
-    console.log("----- registerRequest start -----");
+    
     return (dispatch) => {
         // Inform Register API is starting
         dispatch(register());
@@ -85,3 +88,30 @@ export function registerFailure(error) {
     };
 }
 
+
+/* GET STATUS */
+
+export function getSTatusRequest() {
+    return (dispatch) => {
+        //
+    }
+}
+
+export function getStatus() {
+    return {
+        type: AUTH_GET_STATUS    
+    };
+}
+
+export function getStatusSuccess(username) {
+    return {
+        type: AUTH_GET_STATUS_SUCCESS,
+        username
+    };
+}
+
+export function getStatusFailure(error) {
+    return {
+        type: AUTH_GET_STATUS_FAILURE
+    };
+}
