@@ -2,10 +2,15 @@ import React, {Component } from 'react';
 import { Header } from 'components'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Home, Login, Register } from 'containers';
-import { getStatusRequest } from 'actions/authentication';
+import { getStatusRequest, logoutRequest } from 'actions/authentication';
 import { connect } from 'react-redux';
 
 class App extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleLogout = this.handleLogout.bind(this);
+    };
 
     componentDidMount() {
         // get cookie by name
@@ -47,6 +52,22 @@ class App extends Component {
             }
         );
     };
+        
+    handleLogout() {
+        this.props.logoutRequest().then(
+            () => {
+                Materialize.toast('Good Bye!!!', 2000);
+                
+                // EMPTIES THE SESSION
+                let loginData = {
+                    isLoggedIn: false,
+                    username: ''
+                }
+
+                document.cookie = 'key=' + btoa(JSON.stringify(loginData));
+            }
+        )
+    }
 
     render(){
         /* Check whether current route is login or register using regex */
@@ -57,14 +78,15 @@ class App extends Component {
         // 로그인 버튼을 포함한 링크가 정상적으로 작동하고 있지 않음
         return (
                 <div>
-                    {isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn} /> }
+                    {isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn}
+                                                    onLogout={this.handleLogout} /> }
                     <Router>
-                    <Switch>
-                        <Route path="/login" component={Login} />
-                        <Route path="/register" component={Register} />
+                        <Switch>
+                            <Route path="/login" component={Login} />
+                            <Route path="/register" component={Register} />
                             <Route path="/home" component={Home} />
                             <Route exact path="/" component={Home} />
-                    </Switch>
+                        </Switch>
                     </Router>
                 </div>
         );
@@ -81,6 +103,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getStatusRequest: () => {
             return dispatch(getStatusRequest());
+        },
+        logoutRequest: () => {
+            return dispatch(logoutRequest());
         }
     };
 };

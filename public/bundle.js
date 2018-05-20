@@ -25918,10 +25918,13 @@
 	var App = function (_Component) {
 	    _inherits(App, _Component);
 
-	    function App() {
+	    function App(props) {
 	        _classCallCheck(this, App);
 
-	        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+	        _this.handleLogout = _this.handleLogout.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(App, [{
@@ -25934,7 +25937,7 @@
 	                var value = "; " + document.cookie;
 	                var parts = value.split("; " + name + "=");
 	                if (parts.length == 2) return parts.pop().split(";").shift();
-	            }
+	            };
 
 	            // get loginData from cookie
 	            var loginData = getCookie('key');
@@ -25951,11 +25954,8 @@
 	            // page refreshed & has a session in cookie,
 	            // check whether this cookie is valid or not
 	            this.props.getStatusRequest().then(function () {
-	                console.log("----- session status : ", _this2.props.status.valid);
-	                console.log("----- session status : ", _this2.props.status.valid);
 	                // if session is not valid
 	                if (!_this2.props.status.valid) {
-	                    // logout the session
 	                    loginData = {
 	                        isLoggedIn: false,
 	                        username: ''
@@ -25964,9 +25964,24 @@
 	                    document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 
 	                    // and notify
-	                    var $toastContent = $('<span style="color: #FFB4BA">Your session is expired, please log in again</span>');
+	                    var $toastContent = $('<span style="color: #ffb4ba">Your session is expired, please log in again</span>');
 	                    Materialize.toast($toastContent, 4000);
 	                }
+	            });
+	        }
+	    }, {
+	        key: 'handleLogout',
+	        value: function handleLogout() {
+	            this.props.logoutRequest().then(function () {
+	                Materialize.toast('Good Bye!!!', 2000);
+
+	                // EMPTIES THE SESSION
+	                var loginData = {
+	                    isLoggedIn: false,
+	                    username: ''
+	                };
+
+	                document.cookie = 'key=' + btoa(JSON.stringify(loginData));
 	            });
 	        }
 	    }, {
@@ -25981,7 +25996,8 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                isAuth ? undefined : _react2.default.createElement(_components.Header, { isLoggedIn: this.props.status.isLoggedIn }),
+	                isAuth ? undefined : _react2.default.createElement(_components.Header, { isLoggedIn: this.props.status.isLoggedIn,
+	                    onLogout: this.handleLogout }),
 	                _react2.default.createElement(
 	                    _reactRouterDom.BrowserRouter,
 	                    null,
@@ -26011,6 +26027,9 @@
 	    return {
 	        getStatusRequest: function getStatusRequest() {
 	            return dispatch((0, _authentication.getStatusRequest)());
+	        },
+	        logoutRequest: function logoutRequest() {
+	            return dispatch((0, _authentication.logoutRequest)());
 	        }
 	    };
 	};
@@ -26109,7 +26128,7 @@
 	                null,
 	                _react2.default.createElement(
 	                    'a',
-	                    null,
+	                    { onClick: this.props.onLogout },
 	                    _react2.default.createElement(
 	                        'i',
 	                        { className: 'material-icons' },
@@ -26457,6 +26476,8 @@
 	exports.getStatus = getStatus;
 	exports.getStatusSuccess = getStatusSuccess;
 	exports.getStatusFailure = getStatusFailure;
+	exports.logoutRequest = logoutRequest;
+	exports.logout = logout;
 
 	var _axios = __webpack_require__(231);
 
@@ -26549,7 +26570,6 @@
 	        dispatch(getStatus());
 
 	        return _axios2.default.get('/api/account/getInfo').then(function (response) {
-	            console.log('----- info.username : ', response.data.info.username);
 	            dispatch(getStatusSuccess(response.data.info.username));
 	        }).catch(function (error) {
 	            console.log('----- error : ', error);
@@ -26574,6 +26594,21 @@
 	function getStatusFailure(error) {
 	    return {
 	        type: _ActionTypes.AUTH_GET_STATUS_FAILURE
+	    };
+	}
+
+	/* Logout */
+	function logoutRequest() {
+	    return function (dispatch) {
+	        return _axios2.default.post('/api/account/logout').then(function (response) {
+	            dispatch(logout());
+	        });
+	    };
+	}
+
+	function logout() {
+	    return {
+	        type: _ActionTypes.AUTH_LOGOUT
 	    };
 	}
 
@@ -28150,6 +28185,8 @@
 	var AUTH_GET_STATUS = exports.AUTH_GET_STATUS = "AUTH_GET_STATUS";
 	var AUTH_GET_STATUS_SUCCESS = exports.AUTH_GET_STATUS_SUCCESS = "AUTH_GET_STATUS_SUCCESS";
 	var AUTH_GET_STATUS_FAILURE = exports.AUTH_GET_STATUS_FAILURE = "AUTH_GET_STATUS_FAILURE";
+
+	var AUTH_LOGOUT = exports.AUTH_LOGOUT = "AUTH_LOGOUT";
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ActionTypes.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
@@ -31586,6 +31623,14 @@
 	                status: {
 	                    valid: { $set: false },
 	                    isLoggedIn: { $set: false }
+	                }
+	            });
+	        /****** LOGOUT ******/
+	        case types.AUTH_LOGOUT:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                status: {
+	                    isLoggedIn: { $set: false },
+	                    currentUser: { $set: '' }
 	                }
 	            });
 	        default:
