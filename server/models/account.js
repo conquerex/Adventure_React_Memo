@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 
 const Schema = mongoose.Schema;
 
@@ -11,13 +11,13 @@ const Account = new Schema({
 
 
 // generates hash
-Account.method.generateHash = function(password) {
-    return bcryptjs.hashSync(password, 8);
-}
+Account.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, 8);
+};
 
 // compares the password
-Account.method.validateHash = function(password) {
-    return bcryptjs.compareSync(password, this.password);
+Account.methods.validateHash = function(password) {
+    return bcrypt.compareSync(password, this.password);
 }
 
 export default mongoose.model('account', Account);

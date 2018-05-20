@@ -26156,6 +26156,8 @@
 	        };
 	        _this.handleChange = _this.handleChange.bind(_this);
 	        _this.handleLogin = _this.handleLogin.bind(_this);
+	        _this.handleRegister = _this.handleRegister.bind(_this);
+	        _this.handleKeyPress = _this.handleKeyPress.bind(_this);
 	        return _this;
 	    }
 
@@ -26174,7 +26176,7 @@
 	        value: function handleLogin() {
 	            var _this2 = this;
 
-	            console.log("----- handleLogin start -----");
+	            console.log("----- Authentication.js : handleLogin start -----");
 	            var id = this.state.username;
 	            var pw = this.state.password;
 
@@ -26188,6 +26190,38 @@
 	                    });
 	                }
 	            });
+	        }
+	    }, {
+	        key: 'handleRegister',
+	        value: function handleRegister() {
+	            var _this3 = this;
+
+	            console.log("----- Authentication.js : handleRegister start -----");
+	            var id = this.state.username;
+	            var pw = this.state.password;
+
+	            // props로 전달받은 onRegister 을 실행
+	            this.props.onRegister(id, pw).then(
+	            // success : Register 컴포넌트의 handleRegister 에서 리턴한 true/false 값
+	            function (success) {
+	                if (!success) {
+	                    _this3.setState({
+	                        username: '',
+	                        password: ''
+	                    });
+	                }
+	            });
+	        }
+	    }, {
+	        key: 'handleKeyPress',
+	        value: function handleKeyPress(e) {
+	            if (e.charCode == 13) {
+	                if (this.props.mode) {
+	                    this.handleLogin();
+	                } else {
+	                    this.handleRegister();
+	                }
+	            }
 	        }
 	    }, {
 	        key: 'render',
@@ -26275,7 +26309,8 @@
 	                    inputBoxes,
 	                    _react2.default.createElement(
 	                        'a',
-	                        { className: 'waves-effect waves-light btn' },
+	                        { className: 'waves-effect waves-light btn',
+	                            onClick: this.handleRegister },
 	                        'CREATE'
 	                    )
 	                )
@@ -26435,10 +26470,8 @@
 	        value: function handleLogin(id, pw) {
 	            var _this2 = this;
 
-	            console.log("----- login.js : handleLogin start -----");
 	            // Use loginRequest (actions/authentication.js)
 	            return this.props.loginRequest(id, pw).then(function () {
-	                console.log("----- login.js : handleLogin start : ", _this2.props.status, " -----");
 	                if (_this2.props.status === "SUCCESS") {
 	                    // create session data
 	                    var loginData = {
@@ -29540,6 +29573,10 @@
 	exports.login = login;
 	exports.loginSuccess = loginSuccess;
 	exports.loginFailure = loginFailure;
+	exports.registerRequest = registerRequest;
+	exports.register = register;
+	exports.registerSuccess = registerSuccess;
+	exports.registerFailure = registerFailure;
 
 	var _axios = __webpack_require__(270);
 
@@ -29555,19 +29592,15 @@
 
 	/* LOGIN use thunk */
 	function loginRequest(username, password) {
-	    console.log("----- authentication.js : loginRequest start -----");
 	    return function (dispatch) {
-	        console.log("----- loginRequest 1 -----");
 	        // Inform Login API is starting
 	        dispatch(login());
-	        console.log("----- loginRequest 2 -----");
+
 	        // API REQUEST
 	        return _axios2.default.post('/api/account/signin', { username: username, password: password }).then(function (response) {
-	            console.log("----- loginRequest loginSuccess -----");
 	            // SUCCEED
 	            dispatch(loginSuccess(username));
 	        }).catch(function (error) {
-	            console.log("----- loginRequest loginFailure : ", error, " -----");
 	            dispatch(loginFailure());
 	        });
 	    };
@@ -29589,6 +29622,42 @@
 	function loginFailure() {
 	    return {
 	        type: _ActionTypes.AUTH_LOGIN_FAILURE
+	    };
+	}
+
+	/* REGISTER */
+
+	function registerRequest(username, password) {
+	    console.log("----- registerRequest start -----");
+	    return function (dispatch) {
+	        // Inform Register API is starting
+	        dispatch(register());
+
+	        return _axios2.default.post('/api/account/signup', { username: username, password: password }).then(function (response) {
+	            dispatch(registerSuccess());
+	        }).catch(function (error) {
+	            dispatch(registerFailure(error.response.data.code));
+	        });
+	    };
+	}
+
+	function register() {
+	    return {
+	        type: _ActionTypes.AUTH_REGISTER
+	    };
+	}
+
+	function registerSuccess(username) {
+	    return {
+	        type: _ActionTypes.AUTH_REGISTER_SUCCESS,
+	        username: username
+	    };
+	}
+
+	function registerFailure(error) {
+	    return {
+	        type: _ActionTypes.AUTH_REGISTER_FAILURE,
+	        error: error
 	    };
 	}
 
@@ -31158,6 +31227,10 @@
 	var AUTH_LOGIN_SUCCESS = exports.AUTH_LOGIN_SUCCESS = "AUTH_LOGIN_SUCCESS";
 	var AUTH_LOGIN_FAILURE = exports.AUTH_LOGIN_FAILURE = "AUTH_LOGIN_FAILURE";
 
+	var AUTH_REGISTER = exports.AUTH_REGISTER = "AUTH_REGISTER";
+	var AUTH_REGISTER_SUCCESS = exports.AUTH_REGISTER_SUCCESS = "AUTH_REGISTER_SUCCESS";
+	var AUTH_REGISTER_FAILURE = exports.AUTH_REGISTER_FAILURE = "AUTH_REGISTER_FAILURE";
+
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ActionTypes.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
@@ -31180,6 +31253,10 @@
 
 	var _components = __webpack_require__(227);
 
+	var _reactRedux = __webpack_require__(232);
+
+	var _authentication = __webpack_require__(269);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31191,19 +31268,48 @@
 	var Register = function (_Component) {
 	    _inherits(Register, _Component);
 
-	    function Register() {
+	    function Register(props) {
 	        _classCallCheck(this, Register);
 
-	        return _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this, props));
+
+	        _this.handleRegister = _this.handleRegister.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Register, [{
+	        key: 'handleRegister',
+	        value: function handleRegister(id, pw) {
+	            var _this2 = this;
+
+	            return this.props.registerRequest(id, pw).then(function () {
+	                if (_this2.props.status === "SUCCESS") {
+	                    Materialize.toast('Success! Please log in.', 2000);
+	                    _this2.props.history.push('/login');
+	                    return true;
+	                } else {
+	                    /*
+	                        ERROR CODES:
+	                        1: BAD USERNAME
+	                        2: BAD PASSWORD
+	                        3: USERNAME EXISTS
+	                    */
+	                    var errorMessage = ['Invalid Username', 'Password is too short', 'Username already exists'];
+
+	                    var $toastContent = $('<span style="color: #ffb4ba">' + errorMessage[_this2.props.errorCode - 1] + '</span>');
+	                    Materialize.toast($toastContent, 2000);
+	                    return false;
+	                }
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_components.Authentication, { mode: false })
+	                _react2.default.createElement(_components.Authentication, { mode: false,
+	                    onRegister: this.handleRegister })
 	            );
 	        }
 	    }]);
@@ -31211,7 +31317,22 @@
 	    return Register;
 	}(_react.Component);
 
-	exports.default = Register;
+	var mapStateToProps = function mapStateToProps(state) {
+	    return {
+	        status: state.authentication.register.status,
+	        errorCode: state.authentication.register.error
+	    };
+	};
+
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	    return {
+	        registerRequest: function registerRequest(id, pw) {
+	            return dispatch((0, _authentication.registerRequest)(id, pw));
+	        }
+	    };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Register);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Register.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
@@ -31270,6 +31391,10 @@
 	    login: {
 	        status: 'INIT'
 	    },
+	    register: {
+	        status: 'INIT',
+	        error: -1
+	    },
 	    status: {
 	        isLoggedIn: false,
 	        currentUser: ''
@@ -31281,7 +31406,7 @@
 
 	    // thunk 를 리턴하는 loginRequest는 리듀서에서 따로 case를 지정해주지 않아도 됨
 	    switch (action.type) {
-	        /* LOGIN */
+	        /****** LOGIN ******/
 	        case types.AUTH_LOGIN:
 	            return (0, _reactAddonsUpdate2.default)(state, {
 	                login: {
@@ -31302,6 +31427,28 @@
 	            return (0, _reactAddonsUpdate2.default)(state, {
 	                login: {
 	                    status: { $set: 'FAILURE' }
+	                }
+	            });
+
+	        /****** REGISTER ******/
+	        case types.AUTH_REGISTER:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    status: { $set: 'WAITING' },
+	                    error: { $set: -1 }
+	                }
+	            });
+	        case types.AUTH_REGISTER_SUCCESS:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    status: { $set: 'SUCCESS' }
+	                }
+	            });
+	        case types.AUTH_REGISTER_FAILURE:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                register: {
+	                    status: { $set: 'FAILURE' },
+	                    error: { $set: action.error }
 	                }
 	            });
 	        default:

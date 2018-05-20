@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/signup', (req, res) => {
     // CHECK USERNAME FORMAT
     let usernameRegex = /^[a-z0-9]+$/;
-
+    
     if(!usernameRegex.test(req.body.usernameRegex)) {
         return res.status(400).json({
             error: "BAD USERNAME",
@@ -72,7 +72,7 @@ router.post('/signin', (req, res) => {
             code: 1
         });
     }
-    console.log("----- signin api : before Account.findOne -----");
+    
     // FIND THE USER BY USERNAME
     Account.findOne({ username: req.body.username }, (err, account) => {
         if (err) throw err;
@@ -84,7 +84,7 @@ router.post('/signin', (req, res) => {
                 code: 1
             });
         };
-        console.log("----- signin api : after account check -----");
+        
         // CHECK WHETHER THE PASSWORD IS VALID
         if(!account.validateHash(req.body.password)) {
             return res.status(401).json({
@@ -93,15 +93,13 @@ router.post('/signin', (req, res) => {
             });
         };
 
-        console.log("----- signin api : after checkes -----");
-
         // AFTER SESSION
         let session = req.session;
         session.loginInfo = {
             _id: account._id,
-            username: acount.username
+            username: account.username
         };
-        console.log("----- signin api : before SUCCESS -----");
+        
         // RETURN SUCCESS
         return res.json({
             success: true

@@ -11,6 +11,8 @@ class Authentication extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     // input 의 값을 state 로 설정하기
@@ -21,6 +23,7 @@ class Authentication extends Component {
     }
 
     handleLogin() {
+        console.log("----- Authentication.js : handleLogin start -----");
         let id = this.state.username;
         let pw = this.state.password;
 
@@ -35,6 +38,35 @@ class Authentication extends Component {
                 }
             }
         );
+    };
+
+    handleRegister() {
+        console.log("----- Authentication.js : handleRegister start -----");
+        let id = this.state.username;
+        let pw = this.state.password;
+
+        // props로 전달받은 onRegister 을 실행
+        this.props.onRegister(id, pw).then(
+            // success : Register 컴포넌트의 handleRegister 에서 리턴한 true/false 값
+            (success) => {
+                if(!success) {
+                    this.setState({
+                        username: '',
+                        password: ''
+                    });
+                }
+            }
+        );
+    };
+
+    handleKeyPress(e) {
+        if(e.charCode==13) {
+            if(this.props.mode) {
+                this.handleLogin();
+            } else {
+                this.handleRegister();
+            }
+        }
     }
 
     render() {
@@ -88,7 +120,8 @@ class Authentication extends Component {
             <div className="card-content">
                 <div className="row">
                     {inputBoxes}
-                    <a className="waves-effect waves-light btn">CREATE</a>
+                    <a className="waves-effect waves-light btn"
+                        onClick={this.handleRegister}>CREATE</a>
                 </div>
             </div>
         );

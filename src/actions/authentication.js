@@ -51,6 +51,7 @@ export function loginFailure() {
 /* REGISTER */
 
 export function registerRequest(username, password) {
+    console.log("----- registerRequest start -----");
     return (dispatch) => {
         // Inform Register API is starting
         dispatch(register());
