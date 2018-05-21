@@ -5,6 +5,18 @@ import { Home, Login, Register } from 'containers';
 import { getStatusRequest, logoutRequest } from 'actions/authentication';
 import { connect } from 'react-redux';
 
+// Redux
+// import { Provider } from 'react-redux';
+// import { createStore, applyMiddleware } from 'redux';
+// import { createStore, applyMiddleware, combineReducers, bindActionCreators } from 'redux';
+// import reducers from 'reducers';
+// import thunk from 'redux-thunk';
+
+// const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+// const reducer = combineReducers(reducers);
+// const store = createStoreWithMiddleware(reducer);
+// const store = createStore(reducers, applyMiddleware(thunk));
+
 class App extends Component {
 
     constructor(props) {
@@ -73,22 +85,24 @@ class App extends Component {
         /* Check whether current route is login or register using regex */
         let re = /(login|register)/;
         let isAuth = re.test(location.pathname);
-        
+
         // todo 2018.05.21
         // 로그인 버튼을 포함한 링크가 정상적으로 작동하고 있지 않음
         return (
+            <Router>
                 <div>
                     {isAuth ? undefined : <Header isLoggedIn={this.props.status.isLoggedIn}
                                                     onLogout={this.handleLogout} /> }
-                    <Router>
+                    <div>
                         <Switch>
+                            <Route exact path="/" component={Home} />
                             <Route path="/login" component={Login} />
                             <Route path="/register" component={Register} />
                             <Route path="/home" component={Home} />
-                            <Route exact path="/" component={Home} />
                         </Switch>
-                    </Router>
+                    </div>
                 </div>
+            </Router>
         );
     }
 }

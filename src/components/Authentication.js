@@ -100,7 +100,7 @@ class Authentication extends Component {
                     <div className="row">
                         {inputBoxes}
                         <a className="waves-effect waves-light btn"
-                           onClick={this.handleLogin}>
+                            onClick={this.handleLogin}>
                             SUBMIT
                         </a>
                     </div>

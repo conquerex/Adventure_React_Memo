@@ -99,11 +99,7 @@
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRedux.Provider,
 	    { store: store },
-	    _react2.default.createElement(
-	        _reactRouterDom.BrowserRouter,
-	        null,
-	        _react2.default.createElement(_containers.App, null)
-	    )
+	    _react2.default.createElement(_containers.App, null)
 	), rootElement);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -25915,6 +25911,18 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	// Redux
+	// import { Provider } from 'react-redux';
+	// import { createStore, applyMiddleware } from 'redux';
+	// import { createStore, applyMiddleware, combineReducers, bindActionCreators } from 'redux';
+	// import reducers from 'reducers';
+	// import thunk from 'redux-thunk';
+
+	// const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+	// const reducer = combineReducers(reducers);
+	// const store = createStoreWithMiddleware(reducer);
+	// const store = createStore(reducers, applyMiddleware(thunk));
+
 	var App = function (_Component) {
 	    _inherits(App, _Component);
 
@@ -25994,20 +26002,24 @@
 	            // todo 2018.05.21
 	            // 로그인 버튼을 포함한 링크가 정상적으로 작동하고 있지 않음
 	            return _react2.default.createElement(
-	                'div',
+	                _reactRouterDom.BrowserRouter,
 	                null,
-	                isAuth ? undefined : _react2.default.createElement(_components.Header, { isLoggedIn: this.props.status.isLoggedIn,
-	                    onLogout: this.handleLogout }),
 	                _react2.default.createElement(
-	                    _reactRouterDom.BrowserRouter,
+	                    'div',
 	                    null,
+	                    isAuth ? undefined : _react2.default.createElement(_components.Header, { isLoggedIn: this.props.status.isLoggedIn,
+	                        onLogout: this.handleLogout }),
 	                    _react2.default.createElement(
-	                        _reactRouterDom.Switch,
+	                        'div',
 	                        null,
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home }),
-	                        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home })
+	                        _react2.default.createElement(
+	                            _reactRouterDom.Switch,
+	                            null,
+	                            _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _containers.Home }),
+	                            _react2.default.createElement(_reactRouterDom.Route, { path: '/login', component: _containers.Login }),
+	                            _react2.default.createElement(_reactRouterDom.Route, { path: '/register', component: _containers.Register }),
+	                            _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _containers.Home })
+	                        )
 	                    )
 	                )
 	            );
