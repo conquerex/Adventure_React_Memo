@@ -26476,7 +26476,7 @@
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -26499,34 +26499,51 @@
 	var Write = function (_Component) {
 	    _inherits(Write, _Component);
 
-	    function Write() {
+	    function Write(props) {
 	        _classCallCheck(this, Write);
 
-	        return _possibleConstructorReturn(this, (Write.__proto__ || Object.getPrototypeOf(Write)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Write.__proto__ || Object.getPrototypeOf(Write)).call(this, props));
+
+	        _this.state = {
+	            contents: ''
+	        };
+
+	        _this.handleChange = _this.handleChange.bind(_this);
+	        return _this;
 	    }
 
 	    _createClass(Write, [{
-	        key: "render",
+	        key: 'handleChange',
+	        value: function handleChange(e) {
+	            this.setState({
+	                contents: e.target.value
+	            });
+	        }
+	    }, {
+	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "div",
-	                { className: "container write" },
+	                'div',
+	                { className: 'container write' },
 	                _react2.default.createElement(
-	                    "div",
-	                    { className: "card" },
+	                    'div',
+	                    { className: 'card' },
 	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "card-content" },
-	                        _react2.default.createElement("textarea", { className: "materialize-textarea",
-	                            placeholder: "Write down your memo" })
+	                        'div',
+	                        { className: 'card-content' },
+	                        _react2.default.createElement('textarea', {
+	                            className: 'materialize-textarea',
+	                            placeholder: 'Write down your memo',
+	                            value: this.state.contents,
+	                            onChange: this.handleChange })
 	                    ),
 	                    _react2.default.createElement(
-	                        "div",
-	                        { className: "card-action" },
+	                        'div',
+	                        { className: 'card-action' },
 	                        _react2.default.createElement(
-	                            "a",
+	                            'a',
 	                            null,
-	                            "POST"
+	                            'POST'
 	                        )
 	                    )
 	                )
@@ -26536,6 +26553,16 @@
 
 	    return Write;
 	}(_react.Component);
+
+	Write.propTypes = {
+	    onPost: _react2.default.PropTypes.func
+	};
+
+	Write.defaultProps = {
+	    onPost: function onPost(contents) {
+	        console.log('Post functino not defined!!!');
+	    }
+	};
 
 	exports.default = Write;
 
@@ -31337,10 +31364,9 @@
 	        key: 'render',
 	        value: function render() {
 	            var write = _react2.default.createElement(_components.Write, null);
-	            console.log("----- Write :", this.props.isLoggedIn);
 	            return _react2.default.createElement(
 	                'div',
-	                null,
+	                { className: 'wrapper' },
 	                this.props.isLoggedIn ? write : undefined
 	            );
 	        }
@@ -31995,7 +32021,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\r\n    background-color: #ECEFF1;\r\n}\r\n\r\n/* Authentication */\r\n.auth {\r\n    margin-top: 50px;\r\n    text-align: center;\r\n}\r\n\r\n.logo {\r\n    text-align: center;\r\n    font-weight: 100;\r\n    font-size: 80px;\r\n\r\n    -webkit-user-select: none;\r\n    /* Chrome all / Safari all */\r\n    -moz-user-select: none;\r\n    /* Firefox all */\r\n    -ms-user-select: none;\r\n    /* IE 10+ */\r\n    user-select: none;\r\n    /* Likely future */\r\n}\r\n\r\na.logo {\r\n    color: #5B5B5B;\r\n}\r\n\r\na {\r\n    cursor: pointer;\r\n}\r\n\r\n.auth .card {\r\n    width: 400px;\r\n    margin: 0 auto;\r\n}\r\n\r\n@media screen and (max-width: 480px) {\r\n    .auth .card {\r\n        width: 100%;\r\n    }\r\n\r\n    .logo {\r\n        font-size: 60px;\r\n    }\r\n}\r\n\r\n.auth .header {\r\n    font-size: 18px;\r\n}\r\n\r\n.auth .row {\r\n    margin-bottom: 0px;\r\n}\r\n\r\n.auth .username {\r\n    margin-top: 0px;\r\n}\r\n\r\n.auth .btn {\r\n    width: 90%;\r\n}\r\n\r\n.auth .footer {\r\n    border-top: 1px solid #e9e9e9;\r\n    padding-bottom: 21px;\r\n}\r\n\r\n/* WRITE */\r\n\r\n.write .materialize-textarea {\r\n    padding: 0px;\r\n    padding-bottom: 36px;\r\n    margin-bottom: 0px;\r\n    font-size: 18px;\r\n}\r\n\r\n.write .card-content {\r\n    padding-bottom: 10px;\r\n}\r\n\r\n.write .card-action {\r\n    text-align: right;\r\n}\r\n", ""]);
+	exports.push([module.id, "body {\r\n    background-color: #ECEFF1;\r\n}\r\n\r\n/* Authentication */\r\n.auth {\r\n    margin-top: 50px;\r\n    text-align: center;\r\n}\r\n\r\n.logo {\r\n    text-align: center;\r\n    font-weight: 100;\r\n    font-size: 80px;\r\n\r\n    -webkit-user-select: none;\r\n    /* Chrome all / Safari all */\r\n    -moz-user-select: none;\r\n    /* Firefox all */\r\n    -ms-user-select: none;\r\n    /* IE 10+ */\r\n    user-select: none;\r\n    /* Likely future */\r\n}\r\n\r\na.logo {\r\n    color: #5B5B5B;\r\n}\r\n\r\na {\r\n    cursor: pointer;\r\n}\r\n\r\n.auth .card {\r\n    width: 400px;\r\n    margin: 0 auto;\r\n}\r\n\r\n@media screen and (max-width: 480px) {\r\n    .auth .card {\r\n        width: 100%;\r\n    }\r\n\r\n    .logo {\r\n        font-size: 60px;\r\n    }\r\n}\r\n\r\n.auth .header {\r\n    font-size: 18px;\r\n}\r\n\r\n.auth .row {\r\n    margin-bottom: 0px;\r\n}\r\n\r\n.auth .username {\r\n    margin-top: 0px;\r\n}\r\n\r\n.auth .btn {\r\n    width: 90%;\r\n}\r\n\r\n.auth .footer {\r\n    border-top: 1px solid #e9e9e9;\r\n    padding-bottom: 21px;\r\n}\r\n\r\n/* WRITE */\r\n\r\n.write .materialize-textarea {\r\n    padding: 0px;\r\n    padding-bottom: 36px;\r\n    margin-bottom: 0px;\r\n    font-size: 18px;\r\n}\r\n\r\n.write .card-content {\r\n    padding-bottom: 10px;\r\n}\r\n\r\n.write .card-action {\r\n    text-align: right;\r\n}\r\n\r\n.wrapper {\r\n    margin-top: 50px;\r\n}", ""]);
 
 	// exports
 

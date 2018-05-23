@@ -1,13 +1,33 @@
 import React, { Component } from 'react';
 
 class Write extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            contents: ''
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+    };
+
+    handleChange(e) {
+        this.setState({
+            contents: e.target.value
+        });
+    }
+
     render() {
         return (
             <div className="container write">
                 <div className="card">
                     <div className="card-content">
-                        <textarea className="materialize-textarea"
-                                placeholder="Write down your memo">
+                        <textarea 
+                            className="materialize-textarea"
+                            placeholder="Write down your memo"
+                            value={this.state.contents}
+                            onChange={this.handleChange}>
                         </textarea>
                     </div>
                     <div className="card-action">
@@ -18,5 +38,13 @@ class Write extends Component {
         );
     }
 }
+
+Write.propTypes = {
+    onPost: React.PropTypes.func
+};
+
+Write.defaultProps = {
+    onPost: (contents) => { console.log('Post functino not defined!!!')}
+};
 
 export default Write;
