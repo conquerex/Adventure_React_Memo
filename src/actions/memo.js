@@ -7,6 +7,7 @@ import {
 
 /* MEMO POST */
 export function memoPostRequest(contents) {
+    console.log("----- memoPostRequest :", contents);
     return (dispatch) => {
         // inform MEMO POST API is starting
         dispatch(memoPost());
@@ -15,6 +16,7 @@ export function memoPostRequest(contents) {
             .then((response) => {
                 dispatch(memoPostSuccess());
             }).catch((error) => {
+                console.log("----- memoPostRequest error:", contents);
                 dispatch(memoPostFailure(error.response.data.code));
             })
     }

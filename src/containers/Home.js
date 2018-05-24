@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Write } from 'components';
 import { connect } from 'react-redux';
-import { memoPostRequest } from 'action/memo';
+import { memoPostRequest } from 'actions/memo';
 
 class Home extends Component {
 
@@ -12,6 +12,7 @@ class Home extends Component {
 
     /* POST MEMO */
     handlePost(contents) {
+        console.log("----- this.props.postStatus :", this.props.postStatus);
         return this.props.memoPostRequest(contents).then(
             () => {
                 if(this.props.postStatus.status === "SUCCESS") {
@@ -66,7 +67,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        memoPostRequest: (connect) => {
+        memoPostRequest: (contents) => {
             return dispatch(memoPostRequest(contents));
         }
     };

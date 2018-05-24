@@ -1,4 +1,4 @@
-import * as types from 'action/ActionTypes';
+import * as types from 'actions/ActionTypes';
 import update from 'react-addons-update';
 
 const initialState = {
@@ -28,6 +28,7 @@ export default function memo(state, action) {
                 }
             });
         case types.MEMO_POST_FAILURE:
+            console.log("----- MEMO_POST_FAILURE :", action.error)
             return update(state, {
                 post: {
                     status: {$set: 'FAILURE'},

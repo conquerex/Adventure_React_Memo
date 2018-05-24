@@ -45,7 +45,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(303);
+	module.exports = __webpack_require__(305);
 
 
 /***/ }),
@@ -72,11 +72,11 @@
 
 	var _redux = __webpack_require__(276);
 
-	var _reducers = __webpack_require__(299);
+	var _reducers = __webpack_require__(300);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _reduxThunk = __webpack_require__(302);
+	var _reduxThunk = __webpack_require__(304);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -25858,11 +25858,11 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Login = __webpack_require__(297);
+	var _Login = __webpack_require__(298);
 
 	var _Login2 = _interopRequireDefault(_Login);
 
-	var _Register = __webpack_require__(298);
+	var _Register = __webpack_require__(299);
 
 	var _Register2 = _interopRequireDefault(_Register);
 
@@ -26509,6 +26509,7 @@
 	        };
 
 	        _this.handleChange = _this.handleChange.bind(_this);
+	        _this.handlePost = _this.handlePost.bind(_this);
 	        return _this;
 	    }
 
@@ -26517,6 +26518,19 @@
 	        value: function handleChange(e) {
 	            this.setState({
 	                contents: e.target.value
+	            });
+	        }
+	    }, {
+	        key: 'handlePost',
+	        value: function handlePost() {
+	            var _this2 = this;
+
+	            var contents = this.state.contents;
+
+	            this.props.onPost(contents).then(function () {
+	                _this2.setState({
+	                    contents: ""
+	                });
 	            });
 	        }
 	    }, {
@@ -26542,7 +26556,7 @@
 	                        { className: 'card-action' },
 	                        _react2.default.createElement(
 	                            'a',
-	                            null,
+	                            { onClick: this.handlePost },
 	                            'POST'
 	                        )
 	                    )
@@ -28302,6 +28316,11 @@
 	var AUTH_GET_STATUS_FAILURE = exports.AUTH_GET_STATUS_FAILURE = "AUTH_GET_STATUS_FAILURE";
 
 	var AUTH_LOGOUT = exports.AUTH_LOGOUT = "AUTH_LOGOUT";
+
+	/* MEMO */
+	var MEMO_POST = exports.MEMO_POST = "MEMO_POST";
+	var MEMO_POST_SUCCESS = exports.MEMO_POST_SUCCESS = "MEMO_POST_SUCCESS";
+	var MEMO_POST_FAILURE = exports.MEMO_POST_FAILURE = "MEMO_POST_FAILURE";
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "ActionTypes.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
@@ -31343,6 +31362,8 @@
 
 	var _reactRedux = __webpack_require__(259);
 
+	var _memo = __webpack_require__(297);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -31354,16 +31375,57 @@
 	var Home = function (_Component) {
 	    _inherits(Home, _Component);
 
-	    function Home() {
+	    function Home(props) {
 	        _classCallCheck(this, Home);
 
-	        return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+
+	        _this.handlePost = _this.handlePost.bind(_this);
+	        return _this;
 	    }
 
+	    /* POST MEMO */
+
+
 	    _createClass(Home, [{
+	        key: 'handlePost',
+	        value: function handlePost(contents) {
+	            var _this2 = this;
+
+	            return this.props.memoPostRequest(contents).then(function () {
+	                if (_this2.props.postStatus.status === "SUCCESS") {
+	                    // TRIGGER LOAD NEW MEMO
+	                    // TO BE IMPLEMENTED
+	                    Materialize.toast('Success!', 2000);
+	                } else {
+	                    /**
+	                     * ERROR CODES
+	                     * 1: NOT LOGGED IN
+	                     * 2: EMPTY CONTENTS
+	                     */
+	                    var $toastContent = void 0;
+	                    switch (_this2.props.postStatus.error) {
+	                        case 1:
+	                            // IF NOT LOGGED IN, NOTIFY AND REFRESH AFTER
+	                            $toastContent = $('<span style="color: #ffb4ba">You are not logged in!!</span>');
+	                            Materialize.toast($toastContent, 2000);
+	                            setTimeout(function () {
+	                                location.reload(false);
+	                            }, 2000);
+	                        case 2:
+	                            $toastContent = $('<span style="color: #ffb4ba">Please write something!!</span>');
+	                            Materialize.toast($toastContent, 2000);
+	                        default:
+	                            $toastContent = $('<span style="color: #ffb4ba">Something broke!!</span>');
+	                            Materialize.toast($toastContent, 2000);
+	                    }
+	                }
+	            });
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var write = _react2.default.createElement(_components.Write, null);
+	            var write = _react2.default.createElement(_components.Write, { onPost: this.handlePost });
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 'wrapper' },
@@ -31377,16 +31439,86 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 	    return {
-	        isLoggedIn: state.authentication.status.isLoggedIn
+	        isLoggedIn: state.authentication.status.isLoggedIn,
+	        postStatus: state.memo.post
 	    };
 	};
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Home);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	    return {
+	        memoPostRequest: function memoPostRequest(contents) {
+	            return dispatch((0, _memo.memoPostRequest)(contents));
+	        }
+	    };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Home.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
 /* 297 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.memoPostRequest = memoPostRequest;
+	exports.memoPost = memoPost;
+	exports.memoPostSuccess = memoPostSuccess;
+	exports.memoPostFailure = memoPostFailure;
+
+	var _axios = __webpack_require__(232);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var _ActionTypes = __webpack_require__(258);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/* MEMO POST */
+	function memoPostRequest(contents) {
+	    console.log("----- memoPostRequest :", contents);
+	    return function (dispatch) {
+	        // inform MEMO POST API is starting
+	        dispatch(memoPost());
+
+	        return _axios2.default.post('/api/memo/', { contents: contents }).then(function (response) {
+	            dispatch(memoPostSuccess());
+	        }).catch(function (error) {
+	            console.log("----- memoPostRequest error:", contents);
+	            dispatch(memoPostFailure(error.response.data.code));
+	        });
+	    };
+	}
+
+	function memoPost() {
+	    return {
+	        type: _ActionTypes.MEMO_POST
+	    };
+	}
+
+	function memoPostSuccess() {
+	    return {
+	        type: _ActionTypes.MEMO_POST_SUCCESS
+	    };
+	}
+
+	function memoPostFailure(error) {
+	    return {
+	        type: _ActionTypes.MEMO_POST_FAILURE,
+	        error: error
+	    };
+	}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "memo.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ }),
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -31507,7 +31639,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Login.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
-/* 298 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -31610,7 +31742,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "Register.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
-/* 299 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -31621,22 +31753,27 @@
 	    value: true
 	});
 
-	var _authentication = __webpack_require__(300);
+	var _authentication = __webpack_require__(301);
 
 	var _authentication2 = _interopRequireDefault(_authentication);
+
+	var _memo = __webpack_require__(303);
+
+	var _memo2 = _interopRequireDefault(_memo);
 
 	var _redux = __webpack_require__(276);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = (0, _redux.combineReducers)({
-	    authentication: _authentication2.default
+	    authentication: _authentication2.default,
+	    memo: _memo2.default
 	});
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "index.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
-/* 300 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -31655,7 +31792,7 @@
 
 	var types = _interopRequireWildcard(_ActionTypes);
 
-	var _reactAddonsUpdate = __webpack_require__(301);
+	var _reactAddonsUpdate = __webpack_require__(302);
 
 	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
 
@@ -31765,7 +31902,7 @@
 	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "authentication.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 
 /***/ }),
-/* 301 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -31935,7 +32072,73 @@
 
 
 /***/ }),
-/* 302 */
+/* 303 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* REACT HOT LOADER */ if (false) { (function () { var ReactHotAPI = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-api\\modules\\index.js"), RootInstanceProvider = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\RootInstanceProvider.js"), ReactMount = require("react-dom/lib/ReactMount"), React = require("react"); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = memo;
+
+	var _ActionTypes = __webpack_require__(258);
+
+	var types = _interopRequireWildcard(_ActionTypes);
+
+	var _reactAddonsUpdate = __webpack_require__(302);
+
+	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var initialState = {
+	    post: {
+	        status: 'INIT',
+	        error: -1
+	    }
+	};
+
+	function memo(state, action) {
+	    if (typeof state === "undefined") {
+	        state = initialState;
+	    }
+
+	    switch (action.type) {
+	        case types.MEMO_POST:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                post: {
+	                    status: { $set: 'WAITING' },
+	                    error: { $set: -1 }
+	                }
+	            });
+	        case types.MEMO_POST_SUCCESS:
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                post: {
+	                    status: { $set: 'SUCCESS' }
+	                }
+	            });
+	        case types.MEMO_POST_FAILURE:
+	            console.log("----- MEMO_POST_FAILURE :", action.error);
+	            return (0, _reactAddonsUpdate2.default)(state, {
+	                post: {
+	                    status: { $set: 'FAILURE' },
+	                    error: { $set: action.error }
+	                }
+	            });
+	        default:
+	            return state;
+	    }
+	}
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (false) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = require("C:\\Users\\Jongkook\\dev-dir\\Adventure_React_Memo\\node_modules\\react-hot-loader\\makeExportsHot.js"); if (makeExportsHot(module, require("react"))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "memo.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+
+/***/ }),
+/* 304 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -31963,11 +32166,11 @@
 	exports['default'] = thunk;
 
 /***/ }),
-/* 303 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	
-	var content = __webpack_require__(304);
+	var content = __webpack_require__(306);
 
 	if(typeof content === 'string') content = [[module.id, content, '']];
 
@@ -31981,7 +32184,7 @@
 	options.transform = transform
 	options.insertInto = undefined;
 
-	var update = __webpack_require__(306)(content, options);
+	var update = __webpack_require__(308)(content, options);
 
 	if(content.locals) module.exports = content.locals;
 
@@ -32013,10 +32216,10 @@
 	}
 
 /***/ }),
-/* 304 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(305)(false);
+	exports = module.exports = __webpack_require__(307)(false);
 	// imports
 
 
@@ -32027,7 +32230,7 @@
 
 
 /***/ }),
-/* 305 */
+/* 307 */
 /***/ (function(module, exports) {
 
 	/*
@@ -32109,7 +32312,7 @@
 
 
 /***/ }),
-/* 306 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*
@@ -32175,7 +32378,7 @@
 	var	singletonCounter = 0;
 	var	stylesInsertedAtTop = [];
 
-	var	fixUrls = __webpack_require__(307);
+	var	fixUrls = __webpack_require__(309);
 
 	module.exports = function(list, options) {
 		if (false) {
@@ -32495,7 +32698,7 @@
 
 
 /***/ }),
-/* 307 */
+/* 309 */
 /***/ (function(module, exports) {
 
 	
