@@ -1,24 +1,29 @@
 import React, { Component } from 'react';
+import TimeAgo from react-timeago;
 
 class Memo extends Component {
     render() {
+        const {data, ownership} = this.props; // ES6 의 비구조화 할당
+
         return (
             <div className="container memo">
                 <div className="card">
                     <div className="info">
-                        <a className="username">Writer</a> wrote a log, 1 second ago
+                        <a className="username">{data.writer}</a> wrote a log, <TimeAgo data={data.date.created}/>
                         <div className="option-button">
-                            <a className="dropdown-button" id="dropdown-button-id" data-activates="dropdown-id">
+                            <a className="dropdown-button" 
+                                id={`dropdown-button-${data._id}`}
+                                data-activates={`dropdown-${data._id}`}>
                                 <i className="material-icons icon-button">more_vert</i>
                             </a>
-                            <ul className="dropdown-content" id="dropdown-id">
+                            <ul className="dropdown-content" id={`dropdown-${data._id}`}>
                                 <li><a>Edit</a></li>
                                 <li><a>Remove</a></li>
                             </ul>
                         </div>
                     </div>
                     <div className="card-content">
-                        Contents
+                        {data.contents}
                     </div>
                     <div className="footer">
                         <i className="material-icons log-footer-icon star icon-button">Star</i>
