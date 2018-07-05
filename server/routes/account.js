@@ -114,7 +114,7 @@ router.get('/getinfo', (req, res) => {
             error: 1
         })
     }
-    console.log("----- req.session : ", req.session.loginInfo);
+    
     res.json({info: req.session.loginInfo});
 });
 
