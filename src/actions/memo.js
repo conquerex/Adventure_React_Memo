@@ -57,8 +57,23 @@ export function memoPostFailure(error) {
 
 export function memoListRequest(isInitial, listType, id, username) {
     return (dispatch) => {
-        // to be implement
-    }
+        // inform memo list API is starting
+        dispatch(memoList());
+
+        let url = '/api/memo';
+
+        /**
+         * url setup depending on parameters,
+         * to be implement...
+         */
+
+        return axios.get(url)
+                    .then((response) => {
+                        dispatch(memoListSuccess(response.data, isInitial, listType));
+                    }).catch((error) => {
+                        dispatch(memoListFailure());
+                    });
+    };
 }
 
 export function memoList() {

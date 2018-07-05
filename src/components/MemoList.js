@@ -6,6 +6,7 @@ class MemoList extends Component {
 
         const mapToComponents = data => {
             return data.map((memo, i) => {
+                console.log("----- memo :", memo._id);
                 return (<Memo
                             data={memo}
                             ownership={(memo.writer === this.props.currentUser)}

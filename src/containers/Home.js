@@ -5,6 +5,13 @@ import { memoPostRequest } from 'actions/memo';
 
 class Home extends Component {
 
+    componentDidMount() {
+        this.props.memoListRequest(true).then(
+            () => {console.log(this.props.memoData);}
+        )
+    }
+    
+
     constructor(props) {
         super(props);
         this.handlePost = this.handlePost.bind(this);
@@ -128,10 +135,12 @@ class Home extends Component {
             }
         ]
 
+        console.log("----- mockData :", mockData._id);
+
         return (
             <div className="wrapper">
                 { this.props.isLoggedIn ? write : undefined }
-                <MemoList data={mockData} currentUser="Barley" />
+                <MemoList data={this.props.memoData} currentUser={this.props.currentUser} />
             </div>
         );
     }
@@ -140,7 +149,9 @@ class Home extends Component {
 const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.authentication.status.isLoggedIn,
-        postStatus: state.memo.post
+        postStatus: state.memo.post,
+        currentUser: state.authentication.status.currentUser,
+        memoData: state.memo.list.data
     }
 };
 
@@ -148,6 +159,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         memoPostRequest: (contents) => {
             return dispatch(memoPostRequest(contents));
+        },
+        // componentDidMount에서 사용 
+        memoListRequest: (isInitial, listType, is, username) => {
+            return dispatch(memoListRequest(isInitial, listType, id, username));
         }
     };
 };

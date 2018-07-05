@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import TimeAgo from react-timeago; // “1 second ago” 형식
 
 class Memo extends Component {
 
