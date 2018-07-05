@@ -10,4 +10,14 @@ class MemoList extends Component {
     }
 }
 
+MemoList.propTypes = {
+    data : React.PropTypes.array,
+    currentUser : React.PropTypes.string
+}
+
+MemoList.defaultProps = {
+    data : [],
+    currentUser : ''
+}
+
 export default MemoList;
