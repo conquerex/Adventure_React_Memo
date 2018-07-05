@@ -1,9 +1,11 @@
-import React from 'react';
-
+import React, { Component } from 'react';
+import {Memo} from 'components';
 class MemoList extends Component {
     render() {
         return (
-            <div>MemoList</div>
+            <div>
+               <Memo/>
+            </div>
         );
     }
 }
